@@ -21,7 +21,7 @@ int main(){
   int sem_id = semget(SEM_KEY, 1, 0644);
   if (sem_id == -1){
     printf("Semaphore Error %d: %s\n", errno, strerror(errno));
-    return 1;
+    return 2;
   }
 
 
