@@ -3,7 +3,7 @@
 char* get_last_entry(char* data){
   char* new_line = strstr(data, "\n");
   // printf("%s\n", new_line);
-  if (new_line && new_line + 1)
+  if (*(new_line + 1))
     return get_last_entry(new_line + 1);
   else
     return data;
@@ -35,8 +35,10 @@ int main(){
   if ( !strlen(data) )
     printf("Story is empty.\n");
   else {
-    // char* s = get_last_entry(data);
-    printf("Last Entry: [%s]\n", data);
+    char* s = get_last_entry(data);
+    char* t = malloc(strlen(s));
+    strncpy(t, s, strlen(s) - 1);
+    printf("Last Entry: [%s]\n", t);
   }
 
   printf("Please enter the next line: ");

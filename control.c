@@ -41,7 +41,7 @@ void remove_memory(){
   semop(sem_id, &sf, 1);
 
   char* data = shmat(shm_id, 0, 0);
-  printf("Removing Story: [%s]\n", data);
+  printf("Removing Story:\n%s", data);
   shmctl(shm_id, IPC_RMID, 0);
   semctl(sem_id, 0, IPC_RMID);
 
@@ -56,7 +56,7 @@ void view_content(){
   }
 
   char* data = shmat(shm_id, 0, 0);
-  printf("Story Content: [%s]\n", data);
+  printf("Story Content:\n%s", data);
 
 }
 
