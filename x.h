@@ -11,9 +11,15 @@
 #define SEM_KEY 48630
 #define SIZE 1024
 
-union semum{
+union semun{
   int val;
   struct semod_ds *buf;
   unsigned short *array;
   struct seminfo *__buf;
 };
+
+// struct sembuf{
+//   short sem_op;
+//   short sem_num;
+//   short sem_flag;
+// }
