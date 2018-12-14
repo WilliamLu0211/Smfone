@@ -17,7 +17,15 @@ void create_memory(){
   union semun sn;
   sn.val = 1;
   semctl(sem_id, 0, SETVAL, sn);
-  printf("Shared memory and semaphore are created.\n");
+
+  int fd = open(STORY, O_CREAT | O_TRUNC, 0644);
+  if (fd == -1){
+    printf("Error %d: %s\n", errno, strerror(errno));
+    return;
+  }
+  // write(fd, "\0", 1);
+  close(fd);
+  printf("Story created.\n");
 }
 
 void remove_memory(){
@@ -40,23 +48,34 @@ void remove_memory(){
   sf.sem_flg = 0;
   semop(sem_id, &sf, 1);
 
-  char* data = shmat(shm_id, 0, 0);
-  printf("Removing Story:\n%s", data);
+  // char* data = shmat(shm_id, 0, 0);
+
+  int fd = open(STORY, O_RDONLY);
+  if (fd == -1){
+    printf("Error %d: %s\n", errno, strerror(errno));
+    return;
+  }
+  char s[SIZE];
+  read(fd, s, sizeof(s));
+  close(fd);
+  printf("Removing Story:\n%s", s);
   shmctl(shm_id, IPC_RMID, 0);
   semctl(sem_id, 0, IPC_RMID);
-
+  char* args[] = {"rm", STORY, 0};
+  execvp(args[0], args);
 }
 
 void view_content(){
 
-  int shm_id = shmget(SHM_KEY, SIZE, 0644);
-  if (shm_id == -1){
+  int fd = open(STORY, O_RDONLY);
+  if (fd == -1){
     printf("Error %d: %s\n", errno, strerror(errno));
     return;
   }
-
-  char* data = shmat(shm_id, 0, 0);
-  printf("Story Content:\n%s", data);
+  char s[SIZE];
+  read(fd, s, sizeof(s));
+  close(fd);
+  printf("Story Content:\n%s", s);
 
 }
 

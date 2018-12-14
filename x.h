@@ -6,10 +6,13 @@
 #include <sys/sem.h>
 #include <string.h>
 #include <errno.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 #define SHM_KEY 42690
 #define SEM_KEY 48630
 #define SIZE 1024
+#define STORY "story.txt"
 
 union semun{
   int val;

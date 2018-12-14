@@ -1,14 +1,5 @@
 #include "x.h"
 
-char* get_last_entry(char* data){
-  char* new_line = strstr(data, "\n");
-  // printf("%s\n", new_line);
-  if (*(new_line + 1))
-    return get_last_entry(new_line + 1);
-  else
-    return data;
-}
-
 int main(){
   // printf("#");
 
@@ -31,21 +22,21 @@ int main(){
   sf.sem_flg = SEM_UNDO;
   semop(sem_id, &sf, 1);
 
-  char* data = shmat(shm_id, 0, 0);
-  if ( !strlen(data) )
-    printf("Story is empty.\n");
-  else {
-    char* s = get_last_entry(data);
-    char* t = malloc(strlen(s));
-    strncpy(t, s, strlen(s) - 1);
-    printf("Last Entry: [%s]\n", t);
-  }
+  char* last_entry = shmat(shm_id, 0, 0);
+  printf("Last Entry: [%s]\n", last_entry);
 
   printf("Please enter the next line: ");
-  char new_line[256];
+  char new_line[SIZE];
   scanf(" %[^\n]s", new_line);
+  strcpy(last_entry, new_line);
+  int fd = open(STORY, O_WRONLY | O_APPEND);
+  if (fd == -1){
+    printf("Error %d: %s\n", errno, strerror(errno));
+    return 4;
+  }
   strcat(new_line, "\n");
-  data = strcat(data, new_line);
+  write(fd, new_line, strlen(new_line));
+  close(fd);
 
   sf.sem_op = 1;
   semop(sem_id, &sf, 1);
