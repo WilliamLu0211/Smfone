@@ -34,7 +34,7 @@ int main(){
     printf("Error %d: %s\n", errno, strerror(errno));
     return 4;
   }
-  strcat(new_line, "\n");
+  strcat(new_line, "\n\0");
   write(fd, new_line, strlen(new_line));
   close(fd);
 

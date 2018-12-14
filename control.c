@@ -55,8 +55,8 @@ void remove_memory(){
     printf("Error %d: %s\n", errno, strerror(errno));
     return;
   }
-  char s[SIZE];
-  read(fd, s, sizeof(s));
+  char *s = malloc(SIZE);
+  read(fd, s, SIZE);
   close(fd);
   printf("Removing Story:\n%s", s);
   shmctl(shm_id, IPC_RMID, 0);
@@ -72,8 +72,8 @@ void view_content(){
     printf("Error %d: %s\n", errno, strerror(errno));
     return;
   }
-  char s[SIZE];
-  read(fd, s, sizeof(s));
+  char *s = malloc(SIZE);
+  read(fd, s, SIZE);
   close(fd);
   printf("Story Content:\n%s", s);
 
